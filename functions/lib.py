@@ -45,7 +45,7 @@ def geocodeUsAddress(geocode_client, system1, verbose=False):
     }
 
     if verbose == True:
-        print system1['point_id'], arrSystemInfo['With system name']
+        print(system1['point_id'], arrSystemInfo['With system name'])
 
     arrResults = []
     for system_type in arrSystemInfo:
@@ -61,7 +61,7 @@ def geocodeUsAddress(geocode_client, system1, verbose=False):
                 lat, lon = 0, 0
             if lat > 0 and lon < 0:
                 if verbose == True:
-                    print geo_location, lat, lon, system_type, arrSystemInfo[system_type]
+                    print(geo_location, lat, lon, system_type, arrSystemInfo[system_type])
                 return [geo_location.encode('utf-8'), lat, lon]
 
     # Not in US range
@@ -76,7 +76,7 @@ def levenshtein(a, b):
         a, b = b, a
         n, m = m, n
 
-    current = range(n + 1)
+    current = list(range(n + 1))
     for i in range(1, m + 1):
         previous, current = current, [i] + [0] * n
         for j in range(1, n + 1):
@@ -114,7 +114,7 @@ def find_best_match(model, arrOutputs):
     return -1
 
 def google_places_api_qry(lat, lon, query_string, log, radius=None, max_attempts=5, testing=False):
-    import urllib2, time, json
+    import urllib.request, urllib.error, urllib.parse, time, json
 
     apiKey = 'AIzaSyCmHxgeahVexFTQJNfeK3kUFuCyqEGyGw0'
 
@@ -127,14 +127,14 @@ def google_places_api_qry(lat, lon, query_string, log, radius=None, max_attempts
             lat, lon, query_string, radius, apiKey)
 
     if testing is True:
-        print url
+        print(url)
         exit()
     cnt_attempts = 0
     bln_success = 0
     while bln_success == 0 and cnt_attempts < min(max_attempts, 10):
         try:
             time.sleep(0.05 + cnt_attempts)
-            station_scrape = urllib2.urlopen(url)
+            station_scrape = urllib.request.urlopen(url)
             bln_success = 1
         except:
             cnt_attempts += 1
@@ -157,7 +157,7 @@ def fuel_type_mapping(conn, tableName, fieldName, verbose=False):
         conn.execute('''UPDATE {0} SET fuel_type = '{2}' WHERE fuel_type = '' AND {1} LIKE '{3}'
             '''.format(tableName, fieldName, fuel['fuel_type'], "%" + fuel['name'] + "%"))
         if verbose == True and cnt % 10 == 5:
-            print "Finished mapping a total of %s fuels (out of %s) for %s" % (cnt, len(arrFuels), tableName)
+            print("Finished mapping a total of %s fuels (out of %s) for %s" % (cnt, len(arrFuels), tableName))
     return len(arrFuels)
 
 
@@ -169,7 +169,7 @@ def haversine(lon1, lat1, lon2, lat2):
     on the earth (specified in decimal degrees)
     """
     # convert decimal degrees to radians
-    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+    lon1, lat1, lon2, lat2 = list(map(radians, [lon1, lat1, lon2, lat2]))
     # haversine formula
     dlon = lon2 - lon1
     dlat = lat2 - lat1
@@ -195,12 +195,12 @@ def wide_to_long(arrDict, idCols, num_values):
             if i > 1:
                 dttm = dttm + datetime.timedelta(minutes=interval)
             key_i = str(i)
-            if i < 10 and dict1.has_key("value_%s" % i) == False and dict1.has_key("value_0%s" % i) == True:
+            if i < 10 and ("value_%s" % i in dict1) == False and ("value_0%s" % i in dict1) == True:
                 key_i = "0" + str(i)
             if dict1['value_%s' % key_i] == None:
                 continue
 
-            arrLong.append(dict(baseEntry.items() + {'dttm': dttm, 'value': dict1["value_%s" % key_i]}.items()))
+            arrLong.append(dict(list(baseEntry.items()) + list({'dttm': dttm, 'value': dict1["value_%s" % key_i]}.items())))
 
     return arrLong
 
@@ -264,20 +264,20 @@ def safe_float(num_str, default_value=0.0):
 # strings that can be used with "replace", if it is a unicode string with non-ascii characters it will
 # raise an exception. For example, "Meredith Özbil" causes problems because of the umlaut character.
 def safe_str(field):
-    if isinstance(field, basestring):
+    if isinstance(field, str):
         return field
     else:
         return str(field)
 
 
 def safe_strip(field):
-    if isinstance(field, basestring):
+    if isinstance(field, str):
         return field.strip()
     else:
         return field
 
 def safe_strip_dict(d):
-    for key, value in d.iteritems():
+    for key, value in d.items():
         d[key] = safe_strip(value)
 
     return d

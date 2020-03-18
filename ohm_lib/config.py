@@ -1,5 +1,5 @@
-import ConfigParser
-import cStringIO
+import configparser
+import io
 import os
 import stat
 
@@ -26,7 +26,7 @@ class Config(dict):
     def getboolean(self, section, option):
         v = self.deep_get(section, option)
         if v.lower() not in self._boolean_states:
-            raise ValueError, 'Not a boolean: %s' % v
+            raise ValueError('Not a boolean: %s' % v)
         return self._boolean_states[v.lower()]
 
     def base_url(self):
@@ -91,14 +91,14 @@ class Config(dict):
             filename = os.environ.get('ANSIBLE_VAULT_PASSWORD_FILE') or '~/.vault_pass.txt'
             filepath = os.path.expanduser(filename)
             if os.path.exists(filepath):
-                if stat.S_IMODE(os.stat(filepath).st_mode) & 0077:
-                    print("The Vault Password file %s is readable by others! Please fix this." % filename)
+                if stat.S_IMODE(os.stat(filepath).st_mode) & 0o077:
+                    print(("The Vault Password file %s is readable by others! Please fix this." % filename))
                     exit(1)
                 vault_password = open(filepath).readline().strip()
 
         vault = vault_password
 
-        internal_config = ConfigParser.RawConfigParser()
+        internal_config = configparser.RawConfigParser()
 
         for filename in filenames:
             self._read_config(filename, vault, internal_config)
@@ -128,10 +128,10 @@ class Config(dict):
             data = f.read()
             if data[:14] == "$ANSIBLE_VAULT":
                 if vault is None:
-                    print("Encrypted config file %s but no password." % filepath)
+                    print(("Encrypted config file %s but no password." % filepath))
                     exit(1)
                 data = vault.decrypt(data)
-            secret_file = cStringIO.StringIO(data)
+            secret_file = io.StringIO(data)
             internal_config.readfp(secret_file)
             del secret_file
             del data
@@ -154,7 +154,7 @@ class Config(dict):
     @staticmethod
     def _plain_text_keys(data):
         plain_text_keys = []
-        for key, value in data.iteritems():
+        for key, value in data.items():
             if type(value) == dict:
                 plain_text_keys = plain_text_keys + Config._plain_text_keys(value)
 
@@ -166,7 +166,7 @@ class Config(dict):
 
     @staticmethod
     def _remove_plain_text_keys(data, keys_to_remove):
-        for key in data.keys():
+        for key in list(data.keys()):
             value = data[key]
             if type(value) == dict:
                 Config._remove_plain_text_keys(value, keys_to_remove)
@@ -192,7 +192,7 @@ if __name__ == "__main__":
     from environment import environment
 
     print()
-    print("Environment=%s" % environment)
+    print(("Environment=%s" % environment))
     print("--------------------------------")
     pp = pprint.PrettyPrinter(indent=4)
     pp.pprint(config())
