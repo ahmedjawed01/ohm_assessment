@@ -9,9 +9,9 @@
 8. However there are other pull requests in this repository, but please do not look at them and instead do your own work. Be aware that some of these pull requests have been planted there to check for cheating.   
 
 ### Setup ###
-1. Setup for a new python project as normal, we recommend using virtualenv and python 2.7
+1. Setup for a new python project as normal, we recommend using virtualenv and python 3.6
     * For more details, follow: http://timsherratt.org/digital-heritage-handbook/docs/python-pip-virtualenv/
-2. Setup a MySQL database
+2. Setup a MySQL database (MySql 8)
 3. *Fork* the [ohm_assessment](https://github.com/ohmconnect/ohm_assessment) repository into your own repo
 4. Set your python path, eg `export PYTHONPATH=/path/to/my/repo`
 5. Add the pip modules: `pip install -r requirements.txt`
@@ -20,7 +20,7 @@
 8. Add to your environment: `FLASK_ENVIRONMENT=development`
 9. Import the seed.sql file into the database
 10. Migrate to the latest version of the database with `alembic upgrade head`.
-10. Create testing environment: create config/my_test.cnf, setup a test db (using naming convention of development db but that clearly indicates this is your test db), import seed.sql, update new db:`FLASK_ENVIRONMENT=test alembic upgrade head`
+10. Create testing environment: create config/my_test.cnf as of config/my_development.cnf, setup a test db (using naming convention of development db but that clearly indicates this is your test db), import seed.sql, update new db:`FLASK_ENVIRONMENT=test alembic upgrade head`
 11. Do not commit either of your config files to the git repo.
 12. Push your changes. Note this should be on your *forked* repo, either on a master branch or any other branch. It should *not* be on the ohm_assessment repo.
 13. Open a pull request from your_repo/ohm_assessment/your_branch to ohmconnect/ohm_assessment/master. 
