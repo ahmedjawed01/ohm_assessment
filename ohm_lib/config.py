@@ -92,7 +92,7 @@ class Config(dict):
             filepath = os.path.expanduser(filename)
             if os.path.exists(filepath):
                 if stat.S_IMODE(os.stat(filepath).st_mode) & 0o077:
-                    print(("The Vault Password file %s is readable by others! Please fix this." % filename))
+                    print("The Vault Password file %s is readable by others! Please fix this." % filename)
                     exit(1)
                 vault_password = open(filepath).readline().strip()
 
@@ -128,7 +128,7 @@ class Config(dict):
             data = f.read()
             if data[:14] == "$ANSIBLE_VAULT":
                 if vault is None:
-                    print(("Encrypted config file %s but no password." % filepath))
+                    print("Encrypted config file %s but no password." % filepath)
                     exit(1)
                 data = vault.decrypt(data)
             secret_file = io.StringIO(data)
