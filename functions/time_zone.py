@@ -10,7 +10,7 @@ def tz_string(dttm):
 def get_tz_from_name(tz_or_name):
     if tz_or_name is None:
         tz = pytz.utc
-    elif not isinstance(tz_or_name, basestring):
+    elif not isinstance(tz_or_name, str):
         tz = tz_or_name
     elif tz_or_name.upper() == 'SYSTEM':
         tz = get_localzone()
@@ -141,7 +141,7 @@ def get_related_timezone(timezone, filter_by_common_name=False):
 
     # If timezone = "America/Los_Angeles", return "US/Pacific"
     if filter_by_common_name:
-        filtered = filter(lambda key: timezone in related[key], related.keys())
+        filtered = [key for key in list(related.keys()) if timezone in related[key]]
         return filtered[0] if filtered else None
 
     # If timezone = "US/Pacific", return ['America/Los_Angeles', 'Canada/Pacific', 'Canada/Yukon']

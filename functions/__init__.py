@@ -17,7 +17,7 @@ from functions.connect_to import getConnection
 
 # MD Mar-2015 Doing tests with vcr needs plain old urllib2 to work, otherwise use the eventlet version for Celery tasks
 if environment.equals('test') or not eventlet.patcher.already_patched:
-    import urllib2
+    import urllib.request, urllib.error, urllib.parse
 else:
     from eventlet.green import urllib2
 

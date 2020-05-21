@@ -36,7 +36,7 @@ class OhmSQLAlchemy(SQLAlchemy):
     def update_or_create(self, model, defaults={}, **kwargs):
         instance = self.session.query(model).filter_by(**kwargs).first()
         if instance:
-            for k, v in defaults.iteritems():
+            for k, v in defaults.items():
                 setattr(instance, k, v)
             self.session.flush()
         else:
@@ -52,7 +52,7 @@ class OhmSQLAlchemy(SQLAlchemy):
         return instance
 
     def _add(self, model, defaults={}, **kwargs):
-        params = dict((k, v) for k, v in kwargs.iteritems() if not isinstance(v, ClauseElement))
+        params = dict((k, v) for k, v in kwargs.items() if not isinstance(v, ClauseElement))
         params.update(defaults or {})
         instance = model(**params)
         self.session.add(instance)

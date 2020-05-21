@@ -134,7 +134,7 @@ class User(db.Model):
                 db.session.add(RelUserText(user_id=self.user_id, rel_lookup=rel_lookup, attribute=attribute,
                                        create_time=pacific_now()))
                 db.session.commit()
-            except Exception, e:
+            except Exception as e:
                 db.session.rollback()
                 self.put_text(rel_lookup, attribute)
 
