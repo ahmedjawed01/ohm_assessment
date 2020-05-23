@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 @app.route('/community', methods=['GET'])
 def community():
     messages = []
+    users = []
 
     login_user(User.query.get(1))
 
@@ -26,7 +27,10 @@ def community():
     except sqlalchemy.exc.ProgrammingError as e:
         logger.error(e)
         messages.append("Error while fetching data")
-        users = []
+    except Exception as e:
+        logger.error(e)
+        messages.append('Unknown error occured')
+
 
     args = {
             'messages': messages,
