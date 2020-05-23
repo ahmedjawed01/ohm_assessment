@@ -22,6 +22,7 @@ css_base_map:
   filters: cssmin
   output: gen/base_map_%(version)s.css
   contents:
+    - css/common.css
     - css/jquery-ui.css
     - css/jquery-ui.theme.css
     - css/fonts_open_sans.css
