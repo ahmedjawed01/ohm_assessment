@@ -42,6 +42,20 @@ class User(db.Model):
                              cascade="all, delete-orphan")
     rel_user_multis = relationship("RelUserMulti", backref="user")
 
+    CARBON = "Carbon"
+    BRONZE = "Bronze"
+    SILVER = "Silver"
+    GOLD = "Gold"
+    PLATINUM = "Platinum"
+
+    TIERS = {
+        CARBON: 0,
+        BRONZE: 1,
+        SILVER: 2,
+        GOLD: 3,
+        PLATINUM: 4
+    }
+
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)
         self._location = None
@@ -162,24 +176,9 @@ class User(db.Model):
         return self.tier
 
     def is_below_tier(self, tier):
-        current_tier = self.get_tier()
-
-        if current_tier == "Platinum":
-            return False
-
-        if current_tier == "Gold" and tier == "Platinum":
-            return True
-
-        if current_tier == "Silver" and tier in ("Gold", "Platinum"):
-            return True
-
-        if current_tier == "Bronze" and tier in ("Silver", "Gold", "Platinum"):
-            return True
-
-        if current_tier == "Carbon" and tier in ("Bronze", "Silver", "Gold", "Platinum"):
-            return True
-
-        return False
+        _current_tier = self.TIERS[self.get_tier()]
+        _tier = self.TIERS[tier]
+        return _current_tier < _tier
 
     # These are for Flask Login --------
     #
@@ -197,7 +196,6 @@ class User(db.Model):
 
     def get_id(self):
         return self.user_id
-
 
     def __eq__(self, other):
         '''
