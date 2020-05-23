@@ -1,0 +1,5 @@
+__pycache__/
+.idea
+/tests/.cache/*
+/public/webassets-external/
+dump.rdb
