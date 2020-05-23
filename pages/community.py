@@ -3,7 +3,6 @@ import logging
 import sqlalchemy
 from flask import jsonify, render_template, request, Response
 from flask.ext.login import current_user, login_user
-from sqlalchemy import text
 
 from functions import app
 from models import db, User
@@ -19,11 +18,7 @@ def community():
     login_user(User.query.get(1))
 
     try:
-        sql = text('''
-            SELECT user.display_name, user.tier, user.point_balance from user LIMIT 5 
-        ''')
-        result = db.engine.execute(sql)
-        users = [row for row in result]
+        users = User.get_community_users()
     except sqlalchemy.exc.ProgrammingError as e:
         logger.error(e)
         messages.append("Error while fetching data")
